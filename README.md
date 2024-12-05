@@ -26,12 +26,7 @@ Before you begin, ensure you have the following installed on your machine:
    cd local-web
    ```
 
-2. Copy the example environment file and update it with your configuration:
-   ```sh
-   cp .env.example .env
-   ```
-
-3. Create the `web` and `database` networks if they don't exist:
+2. Create the `web` and `database` networks if they don't exist:
    ```sh
    docker network create web
    docker network create database
@@ -40,7 +35,7 @@ Before you begin, ensure you have the following installed on your machine:
    - `web` will be the network that we'll be using for exposing http services to the host machine.
    - `database` will be the network that we'll be using for connecting to the database service.
 
-4. Install self-signed certificates:
+3. Install self-signed certificates:
 
    ```sh
    mkcert -install
@@ -57,7 +52,7 @@ Before you begin, ensure you have the following installed on your machine:
 
    > The `example.com` domain can be replaced with any other domain that you want to use however the `docker.localhost` domain is required for the docker network to work.
 
-5. Start Traefik:
+4. Start Traefik:
    ```sh
    (cd traefik && docker compose up -d)
    ```
@@ -78,6 +73,17 @@ Before you begin, ensure you have the following installed on your machine:
    (cd database && docker compose up -d)
    ```
    This command will start the database services such as MySQL and Redis; it also exposes a web interface for managing the MySQL database at [db.docker.localhost](https://db.docker.localhost).
+
+## Example
+
+To run the example simply go to examples and run the compose project:
+
+```sh
+cd examples/whoami
+docker compose up -d
+```
+
+the whoami service is configured to run in the domain [whoami.docker.localhost](whoami.docker.localhost), so if you navigate your browser to that URL, it should show you whoami logs.
 
 ## Contributing
 
