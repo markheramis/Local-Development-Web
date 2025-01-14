@@ -1,0 +1,25 @@
+name: database
+services:
+  redis:
+    container_name: redis
+    image: redis:alpine
+    privileged: false
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - "redis-data:/data"
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+volumes:
+  redis-data:
+    driver: local
+networks:
+  database:
+    external: true
