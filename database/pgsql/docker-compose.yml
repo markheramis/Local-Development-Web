@@ -1,6 +1,7 @@
 name: database
 services:
   postgres:
+    container_name: pgsql
     image: postgres
     shm_size: 128mb
     environment:
