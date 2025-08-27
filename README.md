@@ -2,11 +2,12 @@
 
 ## Overview
 
-The Local Development Web project is designed to facilitate local development by providing a comprehensive setup that includes Traefik for domain management and SSL. Simulating domain and SSL locally is important because it allows developers to test and debug their applications in an environment that closely mirrors production. Additionally, the project includes a database setup with MySQL and Redis, and various dockerized submodules.
+The Local Development Web project is designed to facilitate local development by providing a comprehensive setup that includes Traefik for domain management and SSL. Simulating domain and SSL locally is important because it allows developers to test and debug their applications in an environment that closely mirrors production. Additionally, the project includes a modular database setup with MySQL, PostgreSQL, and Redis, MinIO object storage, and various dockerized submodules.
 
 ### Key Features:
 - **Traefik Integration**: Traefik is used to manage domains and SSL certificates, making it easier to work with multiple services locally.
-- **Database Services**: The project includes a database setup located in the `database/` directory, which contains MySQL and Redis services.
+- **Database Services**: The project includes a modular database setup located in the `database/` directory, which contains MySQL, PostgreSQL, and Redis services.
+- **MinIO Integration**: Object storage service compatible with Amazon S3 API, accessible via web console for development.
 - **Project Directory**: The project includes a `project/` directory with a `.gitignore` rule to ignore everything there, making it reusable for any other purposes. This allows for flexibility and customization based on specific project needs.
 - **Dynamic Design**: The project is designed to be dynamic, accommodating various services and configurations. This flexibility ensures that new services can be added and managed with ease.
 
@@ -56,23 +57,50 @@ Before you begin, ensure you have the following installed on your machine:
    ```sh
    (cd traefik && docker compose up -d)
    ```
-   This command will start traefik and expose its dashboard at port 8080.
+   This command will start traefik and expose its dashboard at [traefik.docker.localhost](https://traefik.docker.localhost).
 
-5. Start Database:
+5. Start Database Services:
 
-   First you need to copy the `.env.example` file to `.env` and set the correct values for the environment variables.
+   The database services are modular and can be started individually based on your needs:
+
+   **MySQL with phpMyAdmin:**
    ```sh
-   (cd database && cp .env.example .env)
+   (cd database/mysql && docker compose up -d)
+   ```
+   This starts MySQL and exposes phpMyAdmin at [db.docker.localhost](https://db.docker.localhost).
+
+   **PostgreSQL:**
+   ```sh
+   (cd database/pgsql && docker compose up -d)
    ```
 
-   Make sure to inspect the `.env` file and make corrections as needed.
+   **Redis:**
+   ```sh
+   (cd database/redis && docker compose up -d)
+   ```
 
-   Then you can start the database services:
+   **Start all database services:**
+   ```sh
+   (cd database/mysql && docker compose up -d)
+   (cd database/pgsql && docker compose up -d)  
+   (cd database/redis && docker compose up -d)
+   ```
+
+   Each database service uses environment variables that can be customized by creating `.env` files in their respective directories.
+
+6. Start MinIO (Optional):
+
+   MinIO provides S3-compatible object storage for development:
 
    ```sh
-   (cd database && docker compose up -d)
+   (cd minio && docker compose up -d)
    ```
-   This command will start the database services such as MySQL and Redis; it also exposes a web interface for managing the MySQL database at [db.docker.localhost](https://db.docker.localhost).
+
+   After starting, MinIO will be available at:
+   - **API**: [minio-api.docker.localhost](https://minio-api.docker.localhost) (for S3-compatible API calls)
+   - **Console**: [minio-console.docker.localhost](https://minio-console.docker.localhost) (web interface)
+
+   Default credentials: `minioadmin` / `minioadmin`
 
 ## Example
 
