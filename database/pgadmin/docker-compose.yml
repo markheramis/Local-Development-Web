@@ -1,0 +1,50 @@
+name: database
+services:
+  pg-admin:
+    container_name: pg-admin
+    image: dpage/pgadmin4
+    privileged: false
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@example.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_LISTEN_PORT=80
+      - PGADMIN_SERVER_JSON_FILE=/var/lib/pgadmin/servers.json
+      - PGADMIN_PREFERENCES_JSON_FILE=/var/lib/pgadmin/preferences.json
+    ports:
+      - "8080:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - web
+      - database
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./servers.json:/var/lib/pgadmin/servers.json
+      - ./preferences.json:/var/lib/pgadmin/preferences.json
+    labels:
+      # This is enabling traefik to proxy this service
+      - "traefik.enable=true"
+      # Here we have to define the URL
+      # More details https://doc.traefik.io/traefik/v2.0/routing/routers/#rule
+      - "traefik.http.routers.pg-admin.rule=Host(`pg.docker.localhost`)"
+      # Here we define in wich network traefik can find this service
+      - "traefik.docker.network=web"
+      # This is the port that traefik should proxy
+      - "traefik.http.services.pg-admin.loadbalancer.server.port=80"
+      # Activation of TLS
+      - "traefik.http.routers.pg-admin.tls=true"
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+volumes:
+  pgadmin-data:
+    name: pgadmin-data
+    driver: local
+networks:
+  web:
+    external: true
+  database:
+    external: true
