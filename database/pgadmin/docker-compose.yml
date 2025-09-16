@@ -10,8 +10,6 @@ services:
       - PGADMIN_LISTEN_PORT=80
       - PGADMIN_SERVER_JSON_FILE=/var/lib/pgadmin/servers.json
       - PGADMIN_PREFERENCES_JSON_FILE=/var/lib/pgadmin/preferences.json
-    ports:
-      - "8080:80"
     networks:
       - web
       - database
