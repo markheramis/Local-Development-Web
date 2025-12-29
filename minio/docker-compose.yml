@@ -8,6 +8,9 @@ services:
     volumes:
       - ./data:/data
     command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
     networks:
       - web
     labels:

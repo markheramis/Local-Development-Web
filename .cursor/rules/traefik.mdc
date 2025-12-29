@@ -1,0 +1,8 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+Traefik code is located at @traefik
+Traefik runs on docker setup by @traefik/docker-compose.yml
+Traefik can be accessed at https://traefik.docker.localhost/

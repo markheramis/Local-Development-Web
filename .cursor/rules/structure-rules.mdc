@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- certs: contains certificate files
+- database
+    - mysql: contains a docker-compose.yml project that starts a mysql server and a phpmyadmin service
+    - pgsql: contains a docker-compose.yml project that starts a pgsql server (unfinished)
+    - redis: contains a docker-compose.yml project that starts a redis server
+- examples: contains example project to test treafik features (ignore when working withing projects/**)
+- logs: contains logs for treafik
+- minio: contains a docker-compose.yml project that starts a minio server (used for simulating AWS S3 locally)
+- projects: contains individual projects
+    - assurance-api: is a PHP-based API project that looks and acts like Laravel but isn't really completely laravel
+    - sync-api: is a PHP-based API project that looks and acts like Laravel but isn't really completely laravel
+    - dashboard-api: the legacy version of sync-api this project is a full implementation of laravel
+    - orthanc-lifescan: is an Orthanc Server project
+    - orthanc-relay: is an Orthanc Server project
+    - dicom-relay: is a rust project that is supposed to mimic Orthanc Server

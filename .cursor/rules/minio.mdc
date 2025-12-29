@@ -1,0 +1,49 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# MinIO Local S3 Development Environment
+
+## Purpose
+MinIO serves as a local replacement for AWS S3 services, enabling complete local testing without requiring cloud resources. This allows developers to test S3-compatible storage operations in the development environment.
+
+## Configuration
+- **Container**: `sync-minio`
+- **Image**: `minio/minio`
+- **Default Credentials**: 
+  - Username: `minioadmin` (MINIO_ROOT_USER)
+  - Password: `minioadmin` (MINIO_ROOT_PASSWORD)
+- **Command**: `server /data --console-address ":9001"`
+- **Data Storage**: Local directory `./data` mounted at `/data` in container
+- **Network**: Connected to external `web` network for Traefik integration
+
+## Access URLs (via Traefik)
+- **API Endpoint**: `https://minio-api.docker.localhost` (S3-compatible API)
+- **Web Console**: `https://minio-console.docker.localhost` (MinIO management interface)
+- **SSL**: Enabled via Traefik with automatic TLS
+
+## Traefik Integration
+The service is fully integrated with Traefik reverse proxy:
+- **API Service**: Routes `minio-api.docker.localhost` to port 9000
+- **Console Service**: Routes `minio-console.docker.localhost` to port 9001
+- **HTTPS**: Automatic TLS termination via Traefik
+- **Network**: Uses external `web` network for Traefik discovery
+
+## Usage
+- Use `https://minio-api.docker.localhost` as the S3 endpoint in your applications
+- Access the management console at `https://minio-console.docker.localhost`
+- Data persists in the local `./data` directory across container restarts
+- Bucket policies and access controls can be configured through the console or API
+
+## Development Guidelines
+- Configure applications to use `https://minio-api.docker.localhost` as the S3 endpoint
+- Use the web console for bucket management and object browsing
+- Environment variables should switch between MinIO (local) and AWS S3 (production)
+- Compatible with any S3 SDK or library
+
+## Integration
+- Applications running in Docker containers should use the container name `sync-minio:9000` for API access
+- External applications should use the Traefik hostname `minio-api.docker.localhost`
+
+- Ensure your application containers are connected to the `web` network for internal communication
